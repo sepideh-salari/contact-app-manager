@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background-color: #282c34;
+  color: white;
+  border-bottom: 2px solid #61dafb;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin: 0;
+}

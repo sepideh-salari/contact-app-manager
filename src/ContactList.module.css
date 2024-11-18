@@ -1,0 +1,21 @@
+.container {
+  margin-top: 20px;
+}
+
+h3 {
+  font-size: 1.4rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.noContacts {
+  font-size: 14px;
+  color: #777;
+  text-align: center;
+}
