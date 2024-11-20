@@ -1,4 +1,4 @@
-import styles from "./ContactItem.module.css";
+import styles from "../Styles/ContactItem.module.css";
 
 function ContactItem({
   data: { id, name, lastName, email, phone },

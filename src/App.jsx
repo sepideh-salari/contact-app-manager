@@ -1,5 +1,5 @@
-import Header from "./Header";
-import Contacts from "./Contacts";
+import Header from "./Components/Header";
+import Contacts from "./Components/Contacts";
 function App() {
   return (
     <>

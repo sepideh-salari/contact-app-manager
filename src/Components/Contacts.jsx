@@ -1,8 +1,8 @@
 import { useState } from "react";
-import ContactList from "./ContactList";
-import inputs from "./constants/inputs";
+import ContactList from "../Components/ContactList";
+import inputs from "../constants/inputs";
 import { v4 } from "uuid";
-import styles from "./Contacts.module.css";
+import styles from "../Styles/Contacts.module.css";
 function Contacts() {
   const [contacts, setContacts] = useState([]);
   const [alert, setAlert] = useState("");
