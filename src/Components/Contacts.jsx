@@ -1,48 +1,95 @@
-import { useState } from "react";
+import { useReducer } from "react";
 import ContactList from "../Components/ContactList";
 import inputs from "../constants/inputs";
 import { v4 } from "uuid";
 import styles from "../Styles/Contacts.module.css";
-function Contacts() {
-  const [contacts, setContacts] = useState([]);
-  const [alert, setAlert] = useState("");
-  const [contact, setContact] = useState({});
-  const [search, setSearch] = useState("");
-  const changeHandler = (event) => {
-    const name = event.target.name;
 
-    const value = event.target.value;
-    setContact((contact) => ({ ...contact, [name]: value }));
-  };
-  const addHandler = () => {
-    if (
-      !contact.name ||
-      !contact.email ||
-      !contact.phone ||
-      !contact.lastName
-    ) {
-      setAlert("Please Enter Valis Data!");
-      return;
-    }
-    setAlert("");
-    const newContact = { ...contact, id: v4() };
-    setContacts((contacts) => [...contacts, newContact]);
-    setContact({
-      name: "",
-      lastName: "",
-      email: "",
-      phone: "",
+const initialState = {
+  contacts: [],
+  contact: {
+    name: "",
+    lastName: "",
+    email: "",
+    phone: "",
+  },
+  alert: "",
+  search: "",
+  isSubmitted: false,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_CONTACT_FIELD":
+      return {
+        ...state,
+        contact: {
+          ...state.contact,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    case "ADD_CONTACT":
+      if (
+        !state.contact.name ||
+        !state.contact.lastName ||
+        !state.contact.email ||
+        !state.contact.phone
+      ) {
+        const missingFields = [];
+        if (!state.contact.name) missingFields.push("Name");
+        if (!state.contact.lastName) missingFields.push("Last Name");
+        if (!state.contact.email) missingFields.push("Email");
+        if (!state.contact.phone) missingFields.push("Phone");
+        return {
+          ...state,
+          alert: `Missing fields: ${missingFields.join(", ")}`,
+          isSubmitted: true,
+        };
+      }
+      return {
+        ...state,
+        contacts: [...state.contacts, { ...state.contact, id: v4() }],
+        contact: { name: "", lastName: "", email: "", phone: "" },
+        alert: "",
+        isSubmitted: false,
+      };
+    case "DELETE_CONTACT":
+      return {
+        ...state,
+        contacts: state.contacts.filter(
+          (contact) => contact.id !== action.payload
+        ),
+      };
+    case "SET_SEARCH":
+      return { ...state, search: action.payload };
+    default:
+      return state;
+  }
+};
+
+function Contacts() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const changeHandler = (event) => {
+    dispatch({
+      type: "SET_CONTACT_FIELD",
+      payload: { name: event.target.name, value: event.target.value },
     });
   };
-  const deleteHandler = (id) => {
-    const newContacts = contacts.filter((contact) => contact.id !== id);
-    setContacts(newContacts);
+
+  const addHandler = () => {
+    dispatch({ type: "ADD_CONTACT" });
   };
-  const filteredContacts = contacts.filter((contact) =>
-    `${contact.name} ${contact.lastName}`
+
+  const deleteHandler = (id) => {
+    dispatch({ type: "DELETE_CONTACT", payload: id });
+  };
+
+  const filteredContacts = state.contacts.filter((contact) =>
+    `${contact.name} ${contact.lastName} ${contact.email} ${contact.phone}`
       .toLowerCase()
-      .includes(search.toLowerCase())
+      .includes(state.search.toLowerCase())
   );
+
   return (
     <div className={styles.container}>
       <div className={styles.inputGroup}>
@@ -52,22 +99,36 @@ function Contacts() {
             type={input.type}
             placeholder={input.placeholder}
             name={input.name}
-            value={contact[input.name]}
+            value={state.contact[input.name]}
             onChange={changeHandler}
+            className={
+              state.isSubmitted && !state.contact[input.name]
+                ? styles.error
+                : ""
+            }
           />
         ))}
 
         <button onClick={addHandler}>Add contact</button>
       </div>
-      <div>{alert && <p className={styles.alert}>{alert}</p>}</div>
+      <div>{state.alert && <p className={styles.alert}>{state.alert}</p>}</div>
       <input
         type="text"
         placeholder="Search contacts..."
         className={styles.searchBar}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        value={state.search}
+        onChange={(e) =>
+          dispatch({ type: "SET_SEARCH", payload: e.target.value })
+        }
       />
-      <ContactList contacts={filteredContacts} deleteHandler={deleteHandler} />
+      {filteredContacts.length === 0 ? (
+        <p className={styles.noContacts}>No contacts found.</p>
+      ) : (
+        <ContactList
+          contacts={filteredContacts}
+          deleteHandler={deleteHandler}
+        />
+      )}
     </div>
   );
 }
