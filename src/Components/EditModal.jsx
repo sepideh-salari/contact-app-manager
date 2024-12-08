@@ -1,6 +1,24 @@
 import styles from "../Styles/EditModal.module.css";
-function EditModal({ isOpen, contact, onClose, onSave, onChange }) {
-  if (!isOpen) return null;
+import React, { useContext } from "react";
+import ContactContext from "../context/ContactContext";
+function EditModal() {
+  const { state, dispatch } = useContext(ContactContext);
+  const { isModalOpen, selectedContact } = state;
+  if (!isModalOpen) return null;
+  const onChange = (e) => {
+    dispatch({
+      type: "EDIT_CONTACT_FIELD",
+      payload: { name: e.target.name, value: e.target.value },
+    });
+  };
+
+  const onSave = () => {
+    dispatch({ type: "SAVE_CONTACT" });
+  };
+
+  const onClose = () => {
+    dispatch({ type: "CLOSE_MODAL" });
+  };
 
   return (
     <>
@@ -9,25 +27,25 @@ function EditModal({ isOpen, contact, onClose, onSave, onChange }) {
         <input
           type="text"
           name="name"
-          value={contact.name}
+          value={selectedContact.name}
           onChange={onChange}
         />
         <input
           type="text"
           name="lastName"
-          value={contact.lastName}
+          value={selectedContact.lastName}
           onChange={onChange}
         />
         <input
           type="text"
           name="email"
-          value={contact.email}
+          value={selectedContact.email}
           onChange={onChange}
         />
         <input
           type="text"
           name="phone"
-          value={contact.phone}
+          value={selectedContact.phone}
           onChange={onChange}
         />
         <button onClick={onSave}>Save</button>
