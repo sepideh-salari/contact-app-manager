@@ -39,3 +39,10 @@ button {
 button:hover {
   background-color: #c82333;
 }
+.contact_buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  margin: 10px;
+}

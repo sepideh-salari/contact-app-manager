@@ -66,3 +66,12 @@ button:hover {
   border-radius: 4px;
   font-size: 14px;
 }
+.error {
+  border: 2px solid red;
+}
+.noContacts {
+  text-align: center;
+  color: #7b2121;
+  font-size: 16px;
+  margin-top: 20px;
+}

@@ -1,5 +1,6 @@
 import { useReducer } from "react";
 import ContactList from "../Components/ContactList";
+import EditModal from "./EditModal";
 import inputs from "../constants/inputs";
 import { v4 } from "uuid";
 import styles from "../Styles/Contacts.module.css";
@@ -15,6 +16,8 @@ const initialState = {
   alert: "",
   search: "",
   isSubmitted: false,
+  isModalOpen: false,
+  selectedContact: null,
 };
 
 const reducer = (state, action) => {
@@ -39,6 +42,7 @@ const reducer = (state, action) => {
         if (!state.contact.lastName) missingFields.push("Last Name");
         if (!state.contact.email) missingFields.push("Email");
         if (!state.contact.phone) missingFields.push("Phone");
+        setTimeout(() => dispatch({ type: "CLEAR_ALERT" }), 3000);
         return {
           ...state,
           alert: `Missing fields: ${missingFields.join(", ")}`,
@@ -52,6 +56,8 @@ const reducer = (state, action) => {
         alert: "",
         isSubmitted: false,
       };
+    case "CLEAR_ALERT":
+      return { ...state, alert: "" };
     case "DELETE_CONTACT":
       return {
         ...state,
@@ -61,6 +67,34 @@ const reducer = (state, action) => {
       };
     case "SET_SEARCH":
       return { ...state, search: action.payload };
+
+    case "OPEN_MODAL":
+      return {
+        ...state,
+        isModalOpen: true,
+        selectedContact: action.payload,
+      };
+    case "CLOSE_MODAL":
+      return { ...state, isModalOpen: false, selectedContact: null };
+    case "EDIT_CONTACT_FIELD":
+      return {
+        ...state,
+        selectedContact: {
+          ...state.selectedContact,
+          [action.payload.name]: action.payload.value,
+        },
+      };
+    case "SAVE_CONTACT":
+      return {
+        ...state,
+        contacts: state.contacts.map((contact) =>
+          contact.id === state.selectedContact.id
+            ? state.selectedContact
+            : contact
+        ),
+        isModalOpen: false,
+        selectedContact: null,
+      };
     default:
       return state;
   }
@@ -68,7 +102,21 @@ const reducer = (state, action) => {
 
 function Contacts() {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const openEditModal = (contact) => {
+    dispatch({ type: "OPEN_MODAL", payload: contact });
+  };
+  const closeEditModal = () => {
+    dispatch({ type: "CLOSE_MODAL" });
+  };
+  const saveEditedContact = () => {
+    dispatch({ type: "SAVE_CONTACT" });
+  };
+  const editChangeHandler = (e) => {
+    dispatch({
+      type: "EDIT_CONTACT_FIELD",
+      payload: { name: e.target.name, value: e.target.value },
+    });
+  };
   const changeHandler = (event) => {
     dispatch({
       type: "SET_CONTACT_FIELD",
@@ -127,8 +175,16 @@ function Contacts() {
         <ContactList
           contacts={filteredContacts}
           deleteHandler={deleteHandler}
+          editChangeHandler={openEditModal}
         />
       )}
+      <EditModal
+        isOpen={state.isModalOpen}
+        contact={state.selectedContact || {}}
+        onClose={closeEditModal}
+        onSave={saveEditedContact}
+        onChange={editChangeHandler}
+      />
     </div>
   );
 }
