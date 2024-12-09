@@ -1,21 +1,27 @@
 .container {
   margin-top: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-h3 {
-  font-size: 1.4rem;
+.container h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
   color: #333;
-  margin-bottom: 10px;
+  text-align: center;
 }
 
-ul {
-  list-style: none;
+.container ul {
+  list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-.noContacts {
-  font-size: 14px;
-  color: #777;
+.container p {
   text-align: center;
+  font-size: 16px;
+  color: #666;
+  margin-top: 10px;
 }
