@@ -50,4 +50,4 @@ A simple and user-friendly contact management application built with **React**, 
 
 ## Acknowledgements
 
-Thanks to my mentor, Mr. Milad Azami, and their team for guidance and support.
+Thanks to my mentor, Mr. Milad Azami, and his team for guidance and support.
