@@ -17,11 +17,12 @@
 
 .inputGroup input {
   flex: 1;
-  min-width: 150px;
+  min-width: 200px;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+  margin: 10px;
 }
 
 .inputGroup button {
@@ -39,11 +40,6 @@
   cursor: not-allowed;
 }
 
-.inputGroup input.error {
-  border-color: #ff4d4f;
-  background-color: #fff5f5;
-}
-
 .searchBar {
   width: 100%;
   padding: 10px;
@@ -51,21 +47,4 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-}
-
-.alert {
-  padding: 10px;
-  margin-bottom: 20px;
-  background-color: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffeeba;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.noContacts {
-  text-align: center;
-  color: #666;
-  font-size: 16px;
-  margin-top: 20px;
 }

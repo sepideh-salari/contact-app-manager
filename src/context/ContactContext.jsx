@@ -45,30 +45,9 @@ const reducer = (state, action) => {
         selectedContacts: [],
       };
     case "ADD_CONTACT":
-      if (
-        !state.contact.name ||
-        !state.contact.lastName ||
-        !state.contact.email ||
-        !state.contact.phone
-      ) {
-        const missingFields = [];
-        if (!state.contact.name) missingFields.push("Name");
-        if (!state.contact.lastName) missingFields.push("Last Name");
-        if (!state.contact.email) missingFields.push("Email");
-        if (!state.contact.phone) missingFields.push("Phone");
-        setTimeout(() => dispatch({ type: "CLEAR_ALERT" }), 3000);
-        return {
-          ...state,
-          alert: `Missing fields: ${missingFields.join(", ")}`,
-          isSubmitted: true,
-        };
-      }
       return {
         ...state,
-        contacts: [...state.contacts, { ...state.contact, id: v4() }],
-        contact: { name: "", lastName: "", email: "", phone: "" },
-        alert: "",
-        isSubmitted: false,
+        contacts: [...state.contacts, { ...action.payload, id: v4() }],
       };
     case "CLEAR_ALERT":
       return { ...state, alert: "" };
@@ -102,19 +81,16 @@ const reducer = (state, action) => {
       return {
         ...state,
         contacts: state.contacts.map((contact) =>
-          contact.id === state.selectedContact.id
-            ? state.selectedContact
-            : contact
+          contact.id === action.payload.id ? action.payload : contact
         ),
         isModalOpen: false,
-        selectedContact: null,
       };
     default:
       return state;
   }
 };
 
-export const ContactProvider = ({ children }) => {
+const ContactProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
@@ -124,4 +100,4 @@ export const ContactProvider = ({ children }) => {
   );
 };
 
-export default ContactContext;
+export { ContactContext, ContactProvider };

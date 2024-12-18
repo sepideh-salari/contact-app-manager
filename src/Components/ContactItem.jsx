@@ -1,43 +1,23 @@
+import React from "react";
 import styles from "../Styles/ContactItem.module.css";
-import ContactContext from "../context/ContactContext";
-import React, { useContext } from "react";
 
-function ContactItem({ data: { id, name, lastName, email, phone } }) {
-  const { state, dispatch } = useContext(ContactContext);
-
-  const deleteHandler = () => {
-    dispatch({ type: "DELETE_CONTACT", payload: id });
-  };
-
-  const editChangeHandler = () => {
-    dispatch({
-      type: "OPEN_MODAL",
-      payload: { id, name, lastName, email, phone },
-    });
-  };
-
-  const toggleSelection = () => {
-    dispatch({ type: "TOGGLE_CONTACT_SELECTION", payload: id });
-  };
-
+const ContactItem = ({ contact, onEdit, onDelete, onSelect, isSelected }) => {
   return (
-    <li className={styles.item} key={id}>
-      <input
-        type="checkbox"
-        onChange={toggleSelection}
-        className={styles.checkbox}
-      />
-      <p>
-        {name} {lastName}
-      </p>
-      <p>{email}</p>
-      <p>{phone}</p>
-      <div className={styles.contact_buttons}>
-        <button onClick={deleteHandler}>Delete</button>
-        <button onClick={editChangeHandler}>Edit</button>{" "}
+    <li className={styles.item}>
+      <div>
+        <input
+          type="checkbox"
+          checked={isSelected}
+          onChange={() => onSelect(contact.id)}
+        />
+        {contact.name} {contact.lastName} - {contact.email} - {contact.phone}
+        <div className={styles.contact_buttons}>
+          <button onClick={() => onEdit(contact)}>Edit</button>
+          <button onClick={() => onDelete(contact.id)}>Delete</button>
+        </div>
       </div>
     </li>
   );
-}
+};
 
 export default ContactItem;

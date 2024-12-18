@@ -1,39 +1,41 @@
+import React from "react";
 import ContactItem from "./ContactItem";
 import styles from "../Styles/ContactList.module.css";
-import ContactContext from "../context/ContactContext";
-import React, { useContext } from "react";
-function ContactList() {
-  const { state, dispatch } = useContext(ContactContext);
-  const { contacts, selectedContacts } = state;
-  const deleteHandler = (id) => {
-    dispatch({ type: "DELETE_CONTACT", payload: id });
-  };
-  const editChangeHandler = (contact) => {
-    dispatch({ type: "OPEN_MODAL", payload: contact });
-  };
-  const toggleSelection = (id) => {
-    dispatch({ type: "TOGGLE_CONTACT_SELECTION", payload: id });
-  };
+
+const ContactList = ({
+  contacts,
+  selectedContacts,
+  onEdit,
+  onDelete,
+  onSelect,
+  onDeleteSelected,
+}) => {
   return (
     <div className={styles.container}>
       <h3>ContactList</h3>
-      {contacts.length ? (
-        <ul>
-          {contacts.map((contact) => (
-            <ContactItem
-              key={contact.id}
-              data={contact}
-              deleteHandler={deleteHandler}
-              editChangeHandler={editChangeHandler}
-              toggleSelection={toggleSelection}
-            />
-          ))}
-        </ul>
+      {contacts.length > 0 ? (
+        <>
+          <ul>
+            {contacts.map((contact) => (
+              <ContactItem
+                key={contact.id}
+                contact={contact}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onSelect={onSelect}
+                isSelected={selectedContacts.includes(contact.id)}
+              />
+            ))}
+          </ul>
+          {selectedContacts.length > 0 && (
+            <button onClick={onDeleteSelected}>Delete Selected</button>
+          )}
+        </>
       ) : (
-        <p>No contacts yet!</p>
+        <p>No contacts found.</p>
       )}
     </div>
   );
-}
+};
 
 export default ContactList;

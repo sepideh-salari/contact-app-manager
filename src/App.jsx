@@ -1,13 +1,14 @@
 import React from "react";
 import { ContactProvider } from "./context/ContactContext";
-import Header from "./Components/Header";
-import Contacts from "./Components/Contacts";
+import Layout from "./Components/Layout";
+import ContactManager from "./Components/ContactManager";
 
 function App() {
   return (
     <ContactProvider>
-      <Header />
-      <Contacts />
+      <Layout>
+        <ContactManager />
+      </Layout>
     </ContactProvider>
   );
 }
